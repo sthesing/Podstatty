@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<podstatty_settings>
+    <db_path>data/podcast_statistics.sqlite</db_path>
+    <logfiles_path>logs</logfiles_path>
+    <base_url>http://spoileralert.bildungsangst.de</base_url>
+</podstatty_settings>
