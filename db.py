@@ -1,4 +1,6 @@
 # -*- coding: utf8 -*-
+## Copyright (c) 2012 Stefan Thesing
+##
 ##This file is part of Podstatty.
 ##
 ##Podstatty is free software: you can redistribute it and/or modify
@@ -49,11 +51,18 @@ class Filesizes(Storm):
         self.filesize = filesize
         
 class Db:
+    """
+    A class intended to provide handy control over the database.
+    """
     def __init__(self, store, base_url):
         self.store = store
         self.base_url = base_url
 
     def add_file(self, filename):
+        """
+        Processes a prepared logfile and stores the data into the 
+        database.
+        """
         log = open(filename)
         date = filename.split("access_log_")[1]
         date = date.replace("_filtered.txt", "")
@@ -62,7 +71,12 @@ class Db:
             return None
         stats =[]
         for line in log:
-            if (not "torrent" in line) and (not "-\n" in line) :
+            # I don't want statistics for torrent and smi files, neither
+            # for files that don't have any traffic (those lines end with
+            # "-")
+            # TODO: Better implement this using user-defined settings
+            if (not "torrent" in line) and (not "-\n" in line) \
+             and (not ".smi" in line):
                 split_line = line.split()
                 stat = Stats(unicode(split_line[0]), int(split_line[1]), unicode(date))
                 stats.append(stat)
@@ -84,7 +98,13 @@ class Db:
         self.store.commit()
 
     def check_url(self, url):
-        #if the url is not yet in this table
+        """
+        Checks if the filesize of the file found behind this url is 
+        already stored in the database. If not, it tries to retrieve
+        the filesize by making a http HEAD request and stores it into 
+        the database.
+        """
+        #if the url is not yet in the "Filesizes" table
         if not self.store.find(Filesizes, Filesizes.url == url).count():
             # Get the filesize from the server
             # TODO Implement error routine
@@ -93,4 +113,26 @@ class Db:
             # Write the URL and it's filesize to database 
             self.store.add(Filesizes(url, size))
             
-            
+    def calculate_absolute_all(self):
+        tuples = []
+        # Get all urls
+        urls = self.store.find(Filesizes.url)
+        for url in urls:
+            tuples.append(self.calculate_absolute(url))
+        return tuples
+    
+    def calculate_absolute(self, url):
+        # Get all the traffic for this url
+        traffic = self.store.find(Stats.traffic, Stats.url == url)
+        # add it up
+        absolute_download = 0
+        for dl in traffic:
+            absolute_download = absolute_download + dl
+        # Get the filesize
+        filesize = self.store.find(Filesizes.filesize, Filesizes.url == url).one()
+        # Calculate complete downloads
+        # I use floor division because I want to truncate after the  
+        # decimal point. In Python 2.x this doesn't make a difference,
+        # but in Python 3, it does.
+        complete_downloads = absolute_download//filesize
+        return [url, complete_downloads]

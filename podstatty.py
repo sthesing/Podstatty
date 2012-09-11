@@ -1,5 +1,7 @@
 ##! /usr/bin/python
 # -*- coding: utf8 -*-
+## Copyright (c) 2012 Stefan Thesing
+##
 ##This file is part of Podstatty.
 ##
 ##Podstatty is free software: you can redistribute it and/or modify
@@ -21,9 +23,9 @@ __date__ = "Date: 2012/09/10"
 __copyright__ = "Copyright (c) 2012 Stefan Thesing"
 __license__ = "GPL"
 
-from db import Db, Stats
+from db import Db
 from storm.locals import *
-import os, datetime, glob
+import os, glob
 import xml.etree.ElementTree as ET
 
 if __name__ == "__main__":
@@ -36,6 +38,7 @@ if __name__ == "__main__":
     base_url = root.find('base_url').text
     
     # Check if database as specified in settings already exists
+    # TODO: this fails if the folders don't exist
     if os.path.isfile(db_path):
         print "Database exists:" + db_path
         database = create_database("sqlite:"+ db_path)
@@ -51,7 +54,18 @@ if __name__ == "__main__":
          filesize INTEGER)")
         db = Db(store, base_url)
     
+    # Get a list of all files in logfiles_path that match the naming
+    # scheme
     filenames = glob.glob(logfiles_path + '/access_log_*filtered.txt')
+    # Process each file and store the data to database
     for filename in filenames:
         print "Coming up next: " +filename
-        db.add_file(filename)    
+        db.add_file(filename)
+    # Calculate complete downloads
+    tuples = db.calculate_absolute_all()
+    # Dump the results into a csv file
+    f = open('result.csv', 'w')
+    f.write('filename;number_of_downloads\n')
+    for t in tuples:
+        f.write(t[0] + ';' + str(t[1]) + '\n')
+    f.close()
