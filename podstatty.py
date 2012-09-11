@@ -25,26 +25,36 @@ __license__ = "GPL"
 
 from db import Db
 from storm.locals import *
-import os, glob
+import sys, os, glob
 import xml.etree.ElementTree as ET
 
 if __name__ == "__main__":
     
+    settings_path = 'settings.xml'
+    if len(sys.argv) > 1:
+        settings_path = sys.argv[1]
+
     #Read Settings from xml
-    tree = ET.parse('settings.xml')
+    tree = ET.parse(settings_path)
     root = tree.getroot()
     db_path = root.find('db_path').text
     logfiles_path = root.find('logfiles_path').text
     base_url = root.find('base_url').text
-    
+    output_file = root.find('output_file').text
+    exclude = root.find("exclude")
+    exclude_strings = []
+    for child in exclude:
+        exclude_strings.append(child.get('content'))
+            
     # Check if database as specified in settings already exists
-    # TODO: this fails if the folders don't exist
-    if os.path.isfile(db_path):
+    if os.path.exists(db_path):
         print "Database exists:" + db_path
         database = create_database("sqlite:"+ db_path)
         store = Store(database)
         db = Db(store, base_url)
     else:
+        if not os.path.exists(os.path.dirname(db_path)):
+            os.makedirs(os.path.dirname(db_path))
         print "Creating database:" + db_path
         database = create_database("sqlite:"+ db_path)
         store = Store(database)
@@ -60,11 +70,11 @@ if __name__ == "__main__":
     # Process each file and store the data to database
     for filename in filenames:
         print "Coming up next: " +filename
-        db.add_file(filename)
+        db.add_file(filename, exclude_strings)
     # Calculate complete downloads
     tuples = db.calculate_absolute_all()
     # Dump the results into a csv file
-    f = open('result.csv', 'w')
+    f = open(output_file, 'w')
     f.write('filename;number_of_downloads\n')
     for t in tuples:
         f.write(t[0] + ';' + str(t[1]) + '\n')

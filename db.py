@@ -58,7 +58,7 @@ class Db:
         self.store = store
         self.base_url = base_url
 
-    def add_file(self, filename):
+    def add_file(self, filename, exclude_strings):
         """
         Processes a prepared logfile and stores the data into the 
         database.
@@ -71,12 +71,20 @@ class Db:
             return None
         stats =[]
         for line in log:
-            # I don't want statistics for torrent and smi files, neither
-            # for files that don't have any traffic (those lines end with
-            # "-")
-            # TODO: Better implement this using user-defined settings
-            if (not "torrent" in line) and (not "-\n" in line) \
-             and (not ".smi" in line):
+            
+            # In the settings file, users can specify strings that are
+            # used as filter criteria. If the line contains this string,
+            # it won't be processed.
+            # In the beginning, we assume the line will be processed.          
+            line_shall_be_processed = True
+            # 'exclude_strings' is a list of the filter criteria.
+            # If the line contains one of those strings, the line will
+            # not be processed.
+            for string in exclude_strings:
+                if string in line:
+                    line_shall_be_processed = False
+            
+            if line_shall_be_processed:
                 split_line = line.split()
                 stat = Stats(unicode(split_line[0]), int(split_line[1]), unicode(date))
                 stats.append(stat)

@@ -3,4 +3,11 @@
     <db_path>data/podcast_statistics.sqlite</db_path>
     <logfiles_path>logs</logfiles_path>
     <base_url>http://spoileralert.bildungsangst.de</base_url>
+    <output_file>result.csv</output_file>
+    <exclude>        
+        <filter content="torrent" />
+        <filter content="-\n" />
+        <filter content=".smi" />
+    </exclude>
 </podstatty_settings>
+

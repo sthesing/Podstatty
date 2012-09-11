@@ -1,3 +1,6 @@
 *.pyc
+*.csv
 logs/
 data/
+local/
+
