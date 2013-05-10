@@ -27,8 +27,4 @@ If you have more than one podcast, you can make one copy of your `settings.xml` 
 
     python podstatty.py -podcast1.xml
 
-# Bug Warning #
-I seem to have a big bug in here, probably when determining the filesizes. You should probably double check those in the respective database table and correct them manually.  
-Furthermore, I'd be thankful for any help in tracking down that bug. 
-
 

@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <podstatty_settings>
-    <db_path>data/podcast_statistics.sqlite</db_path>
-    <logfiles_path>logs</logfiles_path>
-    <base_url>http://spoileralert.bildungsangst.de</base_url>
-    <output_file>results/result.csv</output_file>
+    <!-- Name your database -->
+    <db_path>data/example.sqlite</db_path>
+    
+    <!-- Where can Podstatty find your logfiles? -->
+    <logfiles_path>path/to/your/logs</logfiles_path>
+    
+    <!-- Base URL of your podcast -->
+    <base_url>http://example.com</base_url>
+    
+    <!-- Where should Podstatty put the results? -->
+    <output_file>results/example_result.csv</output_file>
+    
+    <!-- Here you can define filters: Lines in your logfile containing the defined string will not be processed by Podstatty -->
     <exclude>        
         <filter content="torrent" />
         <filter content="-\n" />
