@@ -2,7 +2,10 @@ Podstatty is a little experiment I'm conducting with the server logs of my podca
 As of now, it's in a _very_ early stage, probably _very_ buggy, and it doesn't do much, at all.
 It dumps the overall traffic for each file into a sqlite db, calculates complete downloads (overall traffic/filesize) and dumps the results to a csv-file.
 
+# Dependencies #
+
 It depends on python-sqlite, Storm, Requests and Elementtree
+On a Debian-bases system, you'll probably get everything you need by running `apt-get install python-sqlite python-storm python-requests python-lxml`
 
 # Input #
 
