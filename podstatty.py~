@@ -18,8 +18,8 @@
 ##along with Podstatty. If not, see http://www.gnu.org/licenses/.
 
 __author__ = "Stefan Thesing <software@webdings.de>"
-__version__ = "0.2_alpha"
-__date__ = "Date: 2013/05/10"
+__version__ = "0.1_alpha"
+__date__ = "Date: 2012/09/10"
 __copyright__ = "Copyright (c) 2012 Stefan Thesing"
 __license__ = "GPL"
 
