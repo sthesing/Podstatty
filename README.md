@@ -2,7 +2,10 @@ Podstatty is a little experiment I'm conducting with the server logs of my podca
 As of now, it's in a _very_ early stage, probably _very_ buggy, and it doesn't do much, at all.
 It dumps the overall traffic for each file into a sqlite db, calculates complete downloads (overall traffic/filesize) and dumps the results to a csv-file.
 
+# Dependencies #
+
 It depends on python-sqlite, Storm, Requests and Elementtree
+On a Debian-bases system, you'll probably get everything you need by running `apt-get install python-sqlite python-storm python-requests python-lxml`
 
 # Input #
 
@@ -23,12 +26,8 @@ Per default, podstatty uses the `settings.xml` file. It can be run using:
 
     python podstatty.py
 
-If you have more than one podcast, you can make one copy of your `settings.xml` file per podcast containing specific settings. In that case you want to modify all the fields in the respective settings file. You then run:
+If you have more than one podcast, you can make one copy of your `settings.xml` file per podcast containing specific settings, e.g. `podcast1.xml` and `podcast2.xml`. In that case you want to modify all the fields in the respective settings file. You then run:
 
-    python podstatty.py -podcast1.xml
-
-# Bug Warning #
-I seem to have a big bug in here, probably when determining the filesizes. You should probably double check those in the respective database table and correct them manually.  
-Furthermore, I'd be thankful for any help in tracking down that bug. 
+    python podstatty.py podcast1.xml
 
 

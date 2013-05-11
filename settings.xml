@@ -18,6 +18,7 @@
         <filter content="-\n" />
         <filter content=" -" />
         <filter content=".smi" />
+        <filter content=".txt" />
     </exclude>
 </podstatty_settings>
 

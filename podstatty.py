@@ -18,8 +18,8 @@
 ##along with Podstatty. If not, see http://www.gnu.org/licenses/.
 
 __author__ = "Stefan Thesing <software@webdings.de>"
-__version__ = "0.1_alpha"
-__date__ = "Date: 2012/09/10"
+__version__ = "0.2.1_alpha"
+__date__ = "Date: 2013/05/12"
 __copyright__ = "Copyright (c) 2012 Stefan Thesing"
 __license__ = "GPL"
 
@@ -74,6 +74,8 @@ if __name__ == "__main__":
     # Calculate complete downloads
     tuples = db.calculate_absolute_all()
     # Dump the results into a csv file
+    if not os.path.exists(os.path.dirname(output_file)):
+        os.makedirs(os.path.dirname(output_file))
     f = open(output_file, 'w')
     f.write('filename;number_of_downloads\n')
     for t in tuples:

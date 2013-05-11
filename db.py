@@ -117,9 +117,14 @@ class Db:
             # Get the filesize from the server
             # TODO Implement error routine
             r = requests.head(self.base_url + url)
-            size = int(r.headers['Content-Length'])
-            # Write the URL and it's filesize to database 
-            self.store.add(Filesizes(url, size))
+            # Files no longer present on the server are removed, for now.            
+            # TODO Maybe add an "else"-condition here and ask the user what to do?
+            # What about files that are no longer there but you still want to 
+            # have them in your statistics?
+            if not (str(r) == '<Response [404]>'):
+                size = int(r.headers['Content-Length'])
+                # Write the URL and it's filesize to database 
+                self.store.add(Filesizes(url, size))
             
     def calculate_absolute_all(self):
         tuples = []
