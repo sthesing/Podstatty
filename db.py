@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-## Copyright (c) 2012 Stefan Thesing
+## Copyright (c) 2013 Stefan Thesing
 ##
 ##This file is part of Podstatty.
 ##
@@ -18,38 +18,7 @@
 
 from storm.locals import Storm, Int, Unicode, ReferenceSet
 import requests
-
-class Stats(Storm):
-    """
-    The table containing the actual numbers 
-    'CREATE TABLE stats (id INTEGER PRIMARY KEY, url VARCHAR, 
-    traffic INTEGER, date_time_string VARCHAR)'
-    """
-    __storm_table__ = "stats"
-    id = Int(primary=True)
-    url = Unicode()
-    traffic = Int()
-    date_time_string = Unicode()
-    
-    
-    def __init__(self, url, traffic, date_time_string):
-        self.url = url
-        self.traffic = traffic
-        self.date_time_string = date_time_string
-        
-class Filesizes(Storm):
-    """
-    The table containing the filesizes for each URL
-    'CREATE TABLE filesizes (url VARCHAR PRIMARY KEY, filesize INTEGER)'
-    """
-    __storm_table__ = "filesizes"
-    url = Unicode(primary=True)
-    filesize = Int()
-    
-    def __init__(self, url, filesize):
-        self.url = url
-        self.filesize = filesize
-        
+       
 class Db:
     """
     A class intended to provide handy control over the database.
@@ -125,3 +94,34 @@ class Db:
                 size = int(r.headers['Content-Length'])
                 # Write the URL and it's filesize to database 
                 self.store.add(Filesizes(url, size))
+
+class Stats(Storm):
+    """
+    The table containing the actual numbers 
+    'CREATE TABLE stats (id INTEGER PRIMARY KEY, url VARCHAR, 
+    traffic INTEGER, date_time_string VARCHAR)'
+    """
+    __storm_table__ = "stats"
+    id = Int(primary=True)
+    url = Unicode()
+    traffic = Int()
+    date_time_string = Unicode()
+    
+    
+    def __init__(self, url, traffic, date_time_string):
+        self.url = url
+        self.traffic = traffic
+        self.date_time_string = date_time_string
+        
+class Filesizes(Storm):
+    """
+    The table containing the filesizes for each URL
+    'CREATE TABLE filesizes (url VARCHAR PRIMARY KEY, filesize INTEGER)'
+    """
+    __storm_table__ = "filesizes"
+    url = Unicode(primary=True)
+    filesize = Int()
+    
+    def __init__(self, url, filesize):
+        self.url = url
+        self.filesize = filesize

@@ -1,13 +1,22 @@
-Podstatty is a little experiment I'm conducting with the server logs of my podcasts.
-As of now, it's in a _very_ early stage, probably _very_ buggy, and it doesn't do much, at all.
-It dumps the overall traffic for each file into a sqlite db, calculates complete downloads (overall traffic/filesize) and dumps the results to a csv-file.
+# Podstatty #
 
-# Dependencies #
+Podstatty is a little experiment I use to generate statistics for my podcasts from server logs.
+
+For the Moment, it takes prepared server logs as input (see [Input](#input) for details) and spits out to files:
+
+1. A sqlite db containing 
+    - a list of traffic per episode file per day and 
+    - a list of the filesizes.
+2. A csv-file of complete downloads (calculated as `(overall traffic)/filesize`) per episode file
+
+The csv file just shows a simplified count of how many times which file has been downloaded. The sqlite db can be used by other software (e.g. [GNU R](http://www.r-project.org/) to generate more elaborate statistics.
+
+## Dependencies ##
 
 It depends on python-sqlite, Storm, Requests and Elementtree
-On a Debian-bases system, you'll probably get everything you need by running `apt-get install python-sqlite python-storm python-requests python-lxml`
+On a Debian-based system, you'll probably get everything you need by running `apt-get install python-sqlite python-storm python-requests python-lxml`
 
-# Input #
+## Input ##
 
 Download the logfile you want to process. Podstatty takes files named in this scheme: access_log_YYYY-MM-DD_filtered.txt, that do only contain the URLs of GET-Requests without the domain and the traffic caused by the request. Something like this:
 
@@ -29,5 +38,4 @@ Per default, podstatty uses the `settings.xml` file. It can be run using:
 If you have more than one podcast, you can make one copy of your `settings.xml` file per podcast containing specific settings, e.g. `podcast1.xml` and `podcast2.xml`. In that case you want to modify all the fields in the respective settings file. You then run:
 
     python podstatty.py podcast1.xml
-
 

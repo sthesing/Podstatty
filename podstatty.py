@@ -1,6 +1,6 @@
 ##! /usr/bin/python
 # -*- coding: utf8 -*-
-## Copyright (c) 2012 Stefan Thesing
+## Copyright (c) 2013 Stefan Thesing
 ##
 ##This file is part of Podstatty.
 ##
@@ -18,24 +18,27 @@
 ##along with Podstatty. If not, see http://www.gnu.org/licenses/.
 
 __author__ = "Stefan Thesing <software@webdings.de>"
-__version__ = "0.2.1_alpha"
-__date__ = "Date: 2013/05/12"
-__copyright__ = "Copyright (c) 2012 Stefan Thesing"
-__license__ = "GPL"
+__version__ = "0.2.2_alpha"
+__date__ = "Date: 2013/05/13"
+__copyright__ = "Copyright (c) 2013 Stefan Thesing"
+__license__ = "GPL3"
 
 from db import Db
 from op import Op
 from storm.locals import *
-import sys, os, glob
+import sys, os
 import xml.etree.ElementTree as ET
 
 if __name__ == "__main__":
     
+    # Default settings file
     settings_path = 'settings.xml'
+    # Maybe the user has passed a custom settings file as an argument
+    # TODO Handle bad arguments
     if len(sys.argv) > 1:
         settings_path = sys.argv[1]
 
-    #Read Settings from xml
+    # Read Settings from xml
     tree = ET.parse(settings_path)
     root = tree.getroot()
     db_path = root.find('db_path').text

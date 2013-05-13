@@ -1,5 +1,5 @@
 # -*- coding: utf8 -*-
-## Copyright (c) 2012 Stefan Thesing
+## Copyright (c) 2013 Stefan Thesing
 ##
 ##This file is part of Podstatty.
 ##
