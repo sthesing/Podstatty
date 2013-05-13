@@ -24,6 +24,7 @@ __copyright__ = "Copyright (c) 2012 Stefan Thesing"
 __license__ = "GPL"
 
 from db import Db
+from op import Op
 from storm.locals import *
 import sys, os, glob
 import xml.etree.ElementTree as ET
@@ -64,20 +65,13 @@ if __name__ == "__main__":
          filesize INTEGER)")
         db = Db(store, base_url)
     
-    # Get a list of all files in logfiles_path that match the naming
-    # scheme
-    filenames = glob.glob(logfiles_path + '/access_log_*filtered.txt')
-    # Process each file and store the data to database
-    for filename in filenames:
-        print "Coming up next: " +filename
-        db.add_file(filename, exclude_strings)
-    # Calculate complete downloads
-    tuples = db.calculate_absolute_all()
-    # Dump the results into a csv file
-    if not os.path.exists(os.path.dirname(output_file)):
-        os.makedirs(os.path.dirname(output_file))
-    f = open(output_file, 'w')
-    f.write('filename;number_of_downloads\n')
-    for t in tuples:
-        f.write(t[0] + ';' + str(t[1]) + '\n')
-    f.close()
+    # Initialise the Operator with the database
+    op = Op(db)
+    
+    # Process new logfiles in the logfiles_path defined in settings,
+    # if any new ones are there.
+    op.process_files(logfiles_path, exclude_strings)
+    
+    # Calculate the absolute downloads and dump them to a csv file 
+    op.dump_absoluste_all_to_csv(output_file)
+    

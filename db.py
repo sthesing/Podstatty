@@ -121,31 +121,7 @@ class Db:
             # TODO Maybe add an "else"-condition here and ask the user what to do?
             # What about files that are no longer there but you still want to 
             # have them in your statistics?
-            if not (str(r) == '<Response [404]>'):
+            if not (r.status_code == 404):
                 size = int(r.headers['Content-Length'])
                 # Write the URL and it's filesize to database 
                 self.store.add(Filesizes(url, size))
-            
-    def calculate_absolute_all(self):
-        tuples = []
-        # Get all urls
-        urls = self.store.find(Filesizes.url)
-        for url in urls:
-            tuples.append(self.calculate_absolute(url))
-        return tuples
-    
-    def calculate_absolute(self, url):
-        # Get all the traffic for this url
-        traffic = self.store.find(Stats.traffic, Stats.url == url)
-        # add it up
-        absolute_download = 0
-        for dl in traffic:
-            absolute_download = absolute_download + dl
-        # Get the filesize
-        filesize = self.store.find(Filesizes.filesize, Filesizes.url == url).one()
-        # Calculate complete downloads
-        # I use floor division because I want to truncate after the  
-        # decimal point. In Python 2.x this doesn't make a difference,
-        # but in Python 3, it does.
-        complete_downloads = absolute_download//filesize
-        return [url, complete_downloads]
